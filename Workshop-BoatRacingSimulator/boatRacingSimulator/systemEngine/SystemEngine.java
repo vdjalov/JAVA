@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 
 import boatRacingSimulator.controller.Controller;
+import boatRacingSimulator.exceptions.ArgumentException;
 import boatRacingSimulator.exceptions.InsufficientContestantsException;
 import boatRacingSimulator.exceptions.NoSetRaceException;
 import boatRacingSimulator.exceptions.RaceAlreadyExistsException;
@@ -59,7 +60,7 @@ public class SystemEngine {
 				try{
 				String result = controller.signUp(input);
 				System.out.println(result);
-				} catch (IllegalArgumentException | NoSetRaceException ex) {
+				} catch (NoSetRaceException | ArgumentException ex) {
 					System.out.println(ex.getMessage());
 				}
 			} else if (input[0].equals("StartRace")) {

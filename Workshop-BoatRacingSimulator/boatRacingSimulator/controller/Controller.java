@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import boatRacingSimulator.engines.JetEngine;
 import boatRacingSimulator.engines.SterndriveEngine;
+import boatRacingSimulator.exceptions.ArgumentException;
 import boatRacingSimulator.exceptions.InsufficientContestantsException;
 import boatRacingSimulator.exceptions.NoSetRaceException;
 import boatRacingSimulator.exceptions.RaceAlreadyExistsException;
@@ -104,7 +105,7 @@ public class Controller {
 		}
 
 		
-		public String signUp(String[] input) throws NoSetRaceException {
+		public String signUp(String[] input) throws NoSetRaceException, ArgumentException {
 			if(this.repository.getAvailableRace() == null) {
 				throw new NoSetRaceException("There is currently no race set.");
 			}
@@ -113,7 +114,7 @@ public class Controller {
 				if(this.repository.getAvailableRace().getAllowedMotorboats().equals("false")) {
 					if(boat.getClass().getSimpleName().equals("PowerBoat") || 
 							boat.getClass().getSimpleName().equals("Yacht")) {
-						throw new IllegalArgumentException("The specified boat does not meet "
+						throw new ArgumentException("The specified boat does not meet "
 								+ "the race constraints.");
 					}
 				}
