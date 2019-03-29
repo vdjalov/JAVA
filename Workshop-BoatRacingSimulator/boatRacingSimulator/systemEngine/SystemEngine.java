@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 
 
 import boatRacingSimulator.controller.Controller;
+import boatRacingSimulator.exceptions.InsufficientContestantsException;
+import boatRacingSimulator.exceptions.NoSetRaceException;
+import boatRacingSimulator.exceptions.RaceAlreadyExistsException;
 
 
 public class SystemEngine {
@@ -37,7 +40,7 @@ public class SystemEngine {
 				try{
 				String result = controller.addRace(input);
 				System.out.println(result);
-				} catch (IllegalArgumentException ex){
+				} catch (RaceAlreadyExistsException ex){
 					System.out.println(ex.getMessage());
 				}
 			} else if (input[0].equals("CreatePowerBoat")) {
@@ -56,14 +59,14 @@ public class SystemEngine {
 				try{
 				String result = controller.signUp(input);
 				System.out.println(result);
-				} catch (IllegalArgumentException ex) {
+				} catch (IllegalArgumentException | NoSetRaceException ex) {
 					System.out.println(ex.getMessage());
 				}
 			} else if (input[0].equals("StartRace")) {
 				try{
 				String result = controller.startRace(input);
 				System.out.println(result);
-				} catch (IllegalArgumentException ex) {
+				} catch (NoSetRaceException | InsufficientContestantsException ex) {
 					System.out.println(ex.getMessage());
 				}
 			} else if (input[0].equals("GetStatistic")) {

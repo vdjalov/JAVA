@@ -5,6 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import boatRacingSimulator.engines.JetEngine;
 import boatRacingSimulator.engines.SterndriveEngine;
+import boatRacingSimulator.exceptions.InsufficientContestantsException;
+import boatRacingSimulator.exceptions.NoSetRaceException;
+import boatRacingSimulator.exceptions.RaceAlreadyExistsException;
 import boatRacingSimulator.interfaces.Boat;
 import boatRacingSimulator.interfaces.Engine;
 import boatRacingSimulator.interfaces.Race;
@@ -41,9 +44,9 @@ public class Controller {
 		}
 
 		
-		public String addRace(String input[]) {
+		public String addRace(String input[]) throws RaceAlreadyExistsException {
 				if(this.repository.getAvailableRace() != null){
-					throw new IllegalArgumentException("The current race is already set.");
+					throw new RaceAlreadyExistsException("The current race is already set.");
 				}
 				
 			double distance = Double.valueOf(input[1]);
@@ -101,9 +104,9 @@ public class Controller {
 		}
 
 		
-		public String signUp(String[] input) {
+		public String signUp(String[] input) throws NoSetRaceException {
 			if(this.repository.getAvailableRace() == null) {
-				throw new IllegalArgumentException("There is currently no race set.");
+				throw new NoSetRaceException("There is currently no race set.");
 			}
 			String model = input[1];
 			Boat boat = this.repository.getAvailableBoats().get(model);
@@ -122,13 +125,13 @@ public class Controller {
 		}
 
 		
-		public String startRace(String[] input) {
+		public String startRace(String[] input) throws NoSetRaceException, InsufficientContestantsException {
 			if(this.repository.getAvailableRace() == null) {
-				throw new IllegalArgumentException("There is currently no race set.");
+				throw new NoSetRaceException("There is currently no race set.");
 			}
 			
 			if(this.repository.getAvailableRace().getBoatParticipants().size() < 3) {
-				throw new IllegalArgumentException("Not enough contestants for the race.");
+				throw new InsufficientContestantsException("Not enough contestants for the race.");
 			}
 		
 			double oceanCurrentSpeed = this.repository.getAvailableRace().getOceanCurrentSpeed();
