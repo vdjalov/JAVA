@@ -1,15 +1,23 @@
 package boatRacingSimulator.models;
 
+import boatRacingSimulator.exceptions.ArgumentException;
 import boatRacingSimulator.interfaces.Engine;
 
 public class Yacht extends BaseBoat {
 
 	private Engine engine;
-	private double cargoWeight;
+	int cargoWeight;
 	
-	public Yacht(String model, double weight, Engine engine, double cargoWeight) {
+	public Yacht(String model, int weight, Engine engine, int cargoWeight) throws ArgumentException {
 		super(model, weight);
 		this.engine = engine;
+		setCargoWeight(cargoWeight);
+	}
+
+	private void setCargoWeight(int cargoWeight) throws ArgumentException {
+		if(cargoWeight <= 0) {
+			throw new ArgumentException("Cargo Weight must be a positive integer.");
+		}
 		this.cargoWeight = cargoWeight;
 	}
 

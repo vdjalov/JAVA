@@ -1,10 +1,12 @@
 package boatRacingSimulator.engines;
 
+import boatRacingSimulator.exceptions.ArgumentException;
+
 public class SterndriveEngine extends BaseEngine {
 
 	private double output;
 	
-	public SterndriveEngine(String model, int horsepower, double displacement) {
+	public SterndriveEngine(String model, int horsepower, int displacement) throws ArgumentException {
 		super(model, horsepower, displacement);
 		this.output = calculateOuput(horsepower, displacement);
 	}

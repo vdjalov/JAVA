@@ -4,6 +4,6 @@ public interface Boat {
 
 	public String getModel();
 	public double getWeight();
-	public double calculateSpeed(double oceanCurrentSpeed, double raceWindSpeed);
+	public abstract double calculateSpeed(double oceanCurrentSpeed, double raceWindSpeed);
 	
 }

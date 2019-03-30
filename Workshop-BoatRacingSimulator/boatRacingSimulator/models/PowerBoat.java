@@ -1,5 +1,6 @@
 package boatRacingSimulator.models;
 
+import boatRacingSimulator.exceptions.ArgumentException;
 import boatRacingSimulator.interfaces.Engine;
 
 public class PowerBoat extends BaseBoat {
@@ -7,7 +8,7 @@ public class PowerBoat extends BaseBoat {
 	private Engine engineOne;
 	private Engine engineTwo;
 	
-	public PowerBoat(String model, double weight, Engine engineOne, Engine engineTwo) {
+	public PowerBoat(String model, int weight, Engine engineOne, Engine engineTwo) throws ArgumentException {
 		super(model, weight);
 		this.engineOne = engineOne;
 		this.engineTwo = engineTwo;

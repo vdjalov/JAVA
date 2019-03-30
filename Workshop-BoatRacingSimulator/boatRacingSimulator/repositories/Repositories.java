@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import boatRacingSimulator.exceptions.DuplicateModelException;
 import boatRacingSimulator.interfaces.Boat;
 import boatRacingSimulator.interfaces.Engine;
 import boatRacingSimulator.interfaces.Race;
@@ -36,12 +37,18 @@ public class Repositories {
 			this.availableRace = race;
 		}
 		// Adding an engine!
-		public void addEngine(String model, Engine engine) {
+		public void addEngine(String model, Engine engine) throws DuplicateModelException {
+				if(this.availableEngines.containsKey(model)) {
+					throw new DuplicateModelException("Duplicate model!");
+				}
 			this.availableEngines.put(model, engine);
 		}
 
 		// Adding an engine!
-			public void addBoat(String model, Boat boat) {
+			public void addBoat(String model, Boat boat) throws DuplicateModelException {
+				if(this.availableBoats.containsKey(model)) {
+					throw new DuplicateModelException("Duplicate model!");
+				}
 				this.availableBoats.put(model, boat);
 			}
 		

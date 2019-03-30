@@ -1,10 +1,12 @@
 package boatRacingSimulator.models;
 
+import boatRacingSimulator.exceptions.ArgumentException;
+
 public class SailBoat extends BaseBoat {
 
 	private double sailEfficiency;
 	
-	public SailBoat(String model, double weight, double sailEfficiency) {
+	public SailBoat(String model, int weight, double sailEfficiency) throws ArgumentException {
 		super(model, weight);
 		this.sailEfficiency = sailEfficiency;
 	}

@@ -3,12 +3,12 @@ package boatRacingSimulator.systemEngine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-
 import boatRacingSimulator.controller.Controller;
 import boatRacingSimulator.exceptions.ArgumentException;
+import boatRacingSimulator.exceptions.DuplicateModelException;
 import boatRacingSimulator.exceptions.InsufficientContestantsException;
 import boatRacingSimulator.exceptions.NoSetRaceException;
+import boatRacingSimulator.exceptions.NonExistantModelException;
 import boatRacingSimulator.exceptions.RaceAlreadyExistsException;
 
 
@@ -22,21 +22,23 @@ public class SystemEngine {
 		}
 		
 		public void start() throws IOException {
-			
 			while(true) {
 				String input[] = this.bf.readLine().split("[\\\\]+");
 					if(input[0].equals("End")) {
 						break;
 					}
 				commandHandler(input);
-					
 			}
 		}
 
 		private void commandHandler(String[] input) {
 			if(input[0].equals("CreateBoatEngine")) {
-				String result = this.controller.createEngine(input);
-				System.out.println(result);
+				try {
+					String result = this.controller.createEngine(input);
+					System.out.println(result);
+				} catch (DuplicateModelException ex) {
+					System.out.println(ex.getMessage());
+				}
 			} else if (input[0].equals("OpenRace")) {
 				try{
 				String result = controller.addRace(input);
@@ -45,22 +47,39 @@ public class SystemEngine {
 					System.out.println(ex.getMessage());
 				}
 			} else if (input[0].equals("CreatePowerBoat")) {
-				String result = controller.createPowerBoat(input);
-				System.out.println(result);
+				
+				try {
+					String result = controller.createPowerBoat(input);
+					System.out.println(result);
+				} catch (DuplicateModelException ex) {
+					System.out.println(ex.getMessage());
+				}
 			} else if (input[0].equals("CreateRowBoat")) {
-				String result = controller.createRowBoat(input);
-				System.out.println(result);
+				try {
+					String result = controller.createRowBoat(input);
+					System.out.println(result);
+				} catch (DuplicateModelException ex) {
+					System.out.println(ex.getMessage());
+				}
 			} else if (input[0].equals("CreateSailBoat")) {
+				try {
 				String result = controller.createSailBoat(input);
 				System.out.println(result);
+				} catch (DuplicateModelException ex) {
+					System.out.println(ex.getMessage());
+				}
 			} else if (input[0].equals("CreateYacht")) {
-				String result = controller.createYacht(input);
-				System.out.println(result);
+				try {
+				  String result = controller.createYacht(input);
+				  System.out.println(result);
+				} catch (DuplicateModelException ex) {
+					System.out.println(ex.getMessage());
+				}
 			} else if (input[0].equals("SignUpBoat")) {
 				try{
 				String result = controller.signUp(input);
 				System.out.println(result);
-				} catch (NoSetRaceException | ArgumentException ex) {
+				} catch (NoSetRaceException | ArgumentException | NonExistantModelException ex) {
 					System.out.println(ex.getMessage());
 				}
 			} else if (input[0].equals("StartRace")) {
@@ -74,7 +93,6 @@ public class SystemEngine {
 				String result = controller.getRaceStatistics();
 				System.out.println(result);
 			}
-			
 		}
 	
 }

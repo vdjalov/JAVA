@@ -6,8 +6,10 @@ import java.util.Map;
 import boatRacingSimulator.engines.JetEngine;
 import boatRacingSimulator.engines.SterndriveEngine;
 import boatRacingSimulator.exceptions.ArgumentException;
+import boatRacingSimulator.exceptions.DuplicateModelException;
 import boatRacingSimulator.exceptions.InsufficientContestantsException;
 import boatRacingSimulator.exceptions.NoSetRaceException;
+import boatRacingSimulator.exceptions.NonExistantModelException;
 import boatRacingSimulator.exceptions.RaceAlreadyExistsException;
 import boatRacingSimulator.interfaces.Boat;
 import boatRacingSimulator.interfaces.Engine;
@@ -28,89 +30,136 @@ public class Controller {
 		}
 
 		
-		public String createEngine(String input[]) {
+		public String createEngine(String input[]) throws DuplicateModelException {
 			String model = input[1];
 			int horsepower = Integer.valueOf(input[2]);
-			double displacement = Double.valueOf(input[3]);
+			int displacement = Integer.valueOf(input[3]);
 			String type = input[4];
 			if(type.equals("Jet")) {
-				Engine jetEngine = new JetEngine(model, horsepower, displacement);
-				this.repository.addEngine(model, jetEngine);
+				
+				Engine jetEngine = null;
+				try {
+					jetEngine = new JetEngine(model, horsepower, displacement);
+					this.repository.addEngine(model, jetEngine);
+				} catch (ArgumentException ex) {
+					return ex.getMessage();
+				}
 			} else if (type.equals("Sterndrive")) {
-				Engine sternEngine = new SterndriveEngine(model, horsepower, displacement);
-				this.repository.addEngine(model, sternEngine);
+				Engine sternEngine = null;
+				try {
+					sternEngine = new SterndriveEngine(model, horsepower, displacement);
+					this.repository.addEngine(model, sternEngine);
+				} catch (ArgumentException ex) {
+					return ex.getMessage();
+					
+				}
+				
 			}
-	return String.format("Engine model %s with %d HP and displacement %.0f cm3 created successfully."
+	return String.format("Engine model %s with %d HP and displacement %d cm3 created successfully."
 				, model, horsepower, displacement);
 		}
 
 		
 		public String addRace(String input[]) throws RaceAlreadyExistsException {
 				if(this.repository.getAvailableRace() != null){
-					throw new RaceAlreadyExistsException("The current race is already set.");
+					throw new RaceAlreadyExistsException(
+							"The current race has already been set.");
 				}
 				
-			double distance = Double.valueOf(input[1]);
+			int distance = Integer.valueOf(input[1]);
 			double windSpeed = Double.valueOf(input[2]);
 			double oceanCurrentSpeed = Double.valueOf(input[3]);
 			String allowedMotorboats = input[4];
-			Race race = new BaseRace(distance, windSpeed, oceanCurrentSpeed, allowedMotorboats);
-			this.repository.setRace(race);
+			Race race = null;
+			try {
+				race = new BaseRace(distance, windSpeed, oceanCurrentSpeed, allowedMotorboats);
+				this.repository.setRace(race);
+			} catch (ArgumentException ex) {
+				return ex.getMessage();
+			}
 			
-			return String.format("A new race with distance %.0f, wind speed %.0f m/s and "
-					+ "ocean current speed %.0f has been set.", 
+			return String.format("A new race with distance %d meters, wind speed %.0f m/s and "
+					+ "ocean current speed %.0f m/s has been set.", 
 					distance, windSpeed, oceanCurrentSpeed);
 		}
 
 		
-		public String createPowerBoat(String[] input) {
+		public String createPowerBoat(String[] input) throws DuplicateModelException {
 			String model = input[1];
-			double weight = Double.valueOf(input[2]);
+			int weight = Integer.valueOf(input[2]);
 			Engine engineOne = this.repository.getAvailableEngines().get(input[3]);
 			Engine engineTwo = this.repository.getAvailableEngines().get(input[4]);
-			Boat powerBoat = new PowerBoat(model, weight, engineOne, engineTwo);
-			this.repository.addBoat(model, powerBoat);
-			return String.format("Power boat with model %s registered succsessfully.",model);
+			Boat powerBoat = null;
+			try {
+				powerBoat = new PowerBoat(model, weight, engineOne, engineTwo);
+				this.repository.addBoat(model, powerBoat);
+			} catch (ArgumentException ex) {
+				return ex.getMessage();
+			}
+			return String.format("Power boat with model %s registered successfully.",model);
 		}
 
 		
-		public String createRowBoat(String[] input) {
+		public String createRowBoat(String[] input) throws DuplicateModelException {
 			String model = input[1];
-			double weight = Double.valueOf(input[2]);
+			int weight = Integer.valueOf(input[2]);
 			int oars = Integer.valueOf(input[3]);
-			Boat rowBoat = new RowBoat(model, weight, oars);
-			this.repository.addBoat(model, rowBoat);
-			return String.format("Row boat with model %s registered succsessfully.",model);
+			Boat rowBoat = null;
+			try {
+				rowBoat = new RowBoat(model, weight, oars);
+				this.repository.addBoat(model, rowBoat);
+			} catch (ArgumentException ex) {
+				return	ex.getMessage();
+			}
+			
+			return String.format("Row boat with model %s registered successfully.",model);
 		}
 
 		
-		public String createSailBoat(String[] input) {
+		public String createSailBoat(String[] input) throws DuplicateModelException {
 			String model = input[1];
-			double weight = Double.valueOf(input[2]);
+			int weight = Integer.valueOf(input[2]);
 			double sailEfficiency = Double.valueOf(input[3]);
-			Boat sailBoat = new SailBoat(model, weight, sailEfficiency);
-			this.repository.addBoat(model, sailBoat);
-			return String.format("Sail boat with model %s registered succsessfully.",model);
+			Boat sailBoat = null;
+			try {
+				sailBoat = new SailBoat(model, weight, sailEfficiency);
+				this.repository.addBoat(model, sailBoat);
+			} catch (ArgumentException ex) {
+				return ex.getMessage();
+				
+			}
+			return String.format("Sail boat with model %s registered successfully.",model);
 		}
 
 		
-		public String createYacht(String[] input) {
+		public String createYacht(String[] input) throws DuplicateModelException {
 			String model = input[1];
-			double weight = Double.valueOf(input[2]);
+			int weight = Integer.valueOf(input[2]);
 			Engine engine = this.repository.getAvailableEngines().get(input[3]);
-			double cargoWeight = Double.valueOf(input[4]);
-			Boat yacht = new Yacht(model, weight, engine, cargoWeight);
-			this.repository.addBoat(model, yacht);
-			return String.format("Yacht boat with model %s registered succsessfully.",model);
+			int cargoWeight = Integer.valueOf(input[4]);
+			Boat yacht = null;
+			try {
+				yacht = new Yacht(model, weight, engine, cargoWeight);
+				this.repository.addBoat(model, yacht);
+			} catch (ArgumentException ex) {
+				return ex.getMessage();
+			}
+			return String.format("Yacht with model %s registered successfully.",model);
 		}
 
 		
-		public String signUp(String[] input) throws NoSetRaceException, ArgumentException {
+		public String signUp(String[] input) throws NoSetRaceException, ArgumentException, NonExistantModelException {
+			
 			if(this.repository.getAvailableRace() == null) {
 				throw new NoSetRaceException("There is currently no race set.");
 			}
 			String model = input[1];
-			Boat boat = this.repository.getAvailableBoats().get(model);
+				Boat boat = null;
+				if(!this.repository.getAvailableBoats().containsKey(model)) {
+					throw new NonExistantModelException("No such model in the database");
+				}
+				 boat = this.repository.getAvailableBoats().get(model);
+			 
 				if(this.repository.getAvailableRace().getAllowedMotorboats().equals("false")) {
 					if(boat.getClass().getSimpleName().equals("PowerBoat") || 
 							boat.getClass().getSimpleName().equals("Yacht")) {
@@ -138,8 +187,9 @@ public class Controller {
 			double oceanCurrentSpeed = this.repository.getAvailableRace().getOceanCurrentSpeed();
 			double raceWindSpeed = this.repository.getAvailableRace().getWindSpeed();
 			Map<Boat, Double> sortedBoats = new HashMap<Boat, Double>();
-			
+		
 			for(String value: this.repository.getAvailableRace().getBoatParticipants().keySet()) {
+
 				double speed = this.repository.getAvailableRace()
 						.getBoatParticipants().get(value)
 						.calculateSpeed(oceanCurrentSpeed, raceWindSpeed);
@@ -184,19 +234,16 @@ public class Controller {
 				
 			StringBuilder sb = new StringBuilder();
 			sb.append("First place: ").append(firstBoat.getClass().getSimpleName())
-			  .append("Model: ").append(firstBoat.getModel())
-			  .append(System.lineSeparator())
-			  .append("Time: ").append(firstBoatRaceTime)
+			  .append(" Model: ").append(firstBoat.getModel())
+			  .append(" Time: ").append(firstBoatRaceTime)
 			  .append(System.lineSeparator())
 			  .append("Second place: ").append(secondBoat.getClass().getSimpleName())
-			  .append("Model: ").append(secondBoat.getModel())
-			  .append(System.lineSeparator())
-			  .append("Time: ").append(secondBoatRaceTime)
+			  .append(" Model: ").append(secondBoat.getModel())
+			  .append(" Time: ").append(secondBoatRaceTime)
 			  .append(System.lineSeparator())
 			  .append("Third place: ").append(thirdBoat.getClass().getSimpleName())
-			  .append("Model: ").append(thirdBoat.getModel())
-			  .append(System.lineSeparator())
-			  .append("Time: ").append(thirdBoatRaceTime)
+			  .append(" Model: ").append(thirdBoat.getModel())
+			  .append(" Time: ").append(thirdBoatRaceTime)
 			  .append(System.lineSeparator());
 			
 			this.repository.setRace(null);
@@ -206,7 +253,7 @@ public class Controller {
 		// Formatting the final output
 		private String checkPrintValue(double output) {
 			if(output < 0) {
-				return "Did not finish";
+				return "Did not finish!";
 			}
 			return String.format("%.2f sec", output);
 		}
@@ -246,9 +293,8 @@ public class Controller {
 			  .append(System.lineSeparator())
 			  .append("SailBoat -> ").append(String.format("%.2f%%", sailBoat * oneShare))
 			  .append(System.lineSeparator())
-			  .append("YachtBoat -> ").append(String.format("%.2f%%", yacht * oneShare))
-			  .append(System.lineSeparator());
-			
+			  .append("Yacht -> ").append(String.format("%.2f%%", yacht * oneShare));
+		
 			return sb.toString();
 		}	
 }
